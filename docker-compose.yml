@@ -1,0 +1,32 @@
+version: "3.1"
+
+services:
+   mongo:
+      image: mongo
+      restart: always
+      environment:
+         MONGO_INITDB_ROOT_USERNAME: root
+         MONGO_INITDB_ROOT_PASSWORD: root
+         MONGO_INITDB_DATABASE: directory
+      ports:
+         - "2717:27017"
+
+   server:
+      build:
+         context: ./server
+         dockerfile: Dockerfile
+      links:
+         - mongo
+      ports:
+         - "5000:5000"
+      depends_on:
+         - mongo
+      restart: always
+
+   client:
+      build:
+         context: ./client
+         dockerfile: Dockerfile
+      ports:
+         - "3001:80"
+      restart: always
